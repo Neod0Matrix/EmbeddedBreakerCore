@@ -1,0 +1,11 @@
+..\..\hex_object\lib_mem.o: ..\UCOSIII\uC-LIB\lib_mem.c
+..\..\hex_object\lib_mem.o: ..\UCOSIII\uC-LIB\lib_mem.h
+..\..\hex_object\lib_mem.o: ..\UCOSIII\uC-CPU\ARM-Cortex-M3\RealView\cpu.h
+..\..\hex_object\lib_mem.o: ..\UCOSIII\uC-CPU\cpu_def.h
+..\..\hex_object\lib_mem.o: ..\UCOSIII\uCOS_CONFIG\cpu_cfg.h
+..\..\hex_object\lib_mem.o: ..\UCOSIII\uC-CPU\cpu_core.h
+..\..\hex_object\lib_mem.o: ..\UCOSIII\uC-LIB\lib_def.h
+..\..\hex_object\lib_mem.o: ..\UCOSIII\uC-LIB\lib_mem.h
+..\..\hex_object\lib_mem.o: ..\UCOSIII\uC-LIB\lib_str.h
+..\..\hex_object\lib_mem.o: ..\UCOSIII\uC-LIB\lib_ascii.h
+..\..\hex_object\lib_mem.o: ..\UCOSIII\uCOS_CONFIG\lib_cfg.h

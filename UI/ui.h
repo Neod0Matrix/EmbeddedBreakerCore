@@ -10,9 +10,7 @@
 #define CoreLogo 		(indStr_Catenate(indStr_Catenate(__Organization__, "@"), __AbbrFrameName__))
 
 //刷屏设置	
-extern u16 oledFreshcnt;
 extern u8 oledScreenFlag;
-extern Bool_ClassType oledFlushEnable;
 
 //刷屏数常量值
 void OLED_ScreenP0_Const (void);

@@ -30,7 +30,8 @@ void bspPeriSysCalls (void)
 
 	//--------------------------定时器及外部中断设置初始化-------------------------------//
 	
-	TIM2_RunLEDTick_Init(ENABLE);						//RunLED闪烁定时器2初始化
+	TIM2_msTimeBase_Init(ENABLE);						//ms级定时器2初始化
+	TIM3_usTimeBase_Init(ENABLE);						//us级定时器3初始化
 	EXTI_Config_Init();									//外部中断初始化
 	
 	//----------------------------------IO口初始化----------------------------------------//

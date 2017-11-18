@@ -910,9 +910,9 @@
           <GroupName>README</GroupName>
           <Files>
             <File>
-              <FileName>readme.txt</FileName>
+              <FileName>README.md</FileName>
               <FileType>5</FileType>
-              <FilePath>..\..\README\readme.txt</FilePath>
+              <FilePath>..\..\README.md</FilePath>
             </File>
             <File>
               <FileName>TODO.txt</FileName>

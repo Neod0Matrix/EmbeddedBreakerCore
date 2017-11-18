@@ -1,14 +1,10 @@
 #include "stdafx.h"
 //code by </MATRIX>@Neod Anderjon
 //====================================================================================================
-//初始化PA8 PD2作为LED IO口
-//初始化PC11 PC12作为电机运行指示IO口
+//初始化PA8 PD2 PC11 PC12作为LED IO口
 
 //LED闪烁设置
 #define BlinkInterval			500u						//定时500ms翻转IO口
-
-float runledBlinkSem = 0.f;
-u16 oledFreshcnt = 0u;
 
 //LED IO初始化
 void LED_Init (void)
@@ -65,6 +61,7 @@ void Aft_PeriInit_Blink (void)
 //RunLED状态控制
 void RunLED_StatusCtrl (void)
 {
+	static u16 runledBlinkSem = 0u;
 	//初始化过程常亮
 	if (Return_Error_Type == Error_Clear && pwsf == JBoot)
 		LED1_On;
@@ -72,10 +69,56 @@ void RunLED_StatusCtrl (void)
 	else if (Return_Error_Type == Error_Clear && pwsf != JBoot) 
 	{
 		runledBlinkSem++;									//信号量开始计数
-		if (runledBlinkSem == TickDivsInterval(BlinkInterval) - 1)
+		if (runledBlinkSem == TickDivsIntervalms(BlinkInterval) - 1)
 		{
 			runledBlinkSem = 0u;
 			LED1_Blink;										//翻转IO口闪烁										
+		}
+	}
+}
+
+//呼吸灯控制
+void BreathLED_StatusCtrl (void)
+{
+	static u16 breledCtrlSem = 0u;							//计数信号量
+	static u16 pwmDutyCycle = 0u;							//PWM占空比
+	static Bool_ClassType cdir = False;						//PWM增减换向标识
+	
+	//初始化过程常亮
+	if (Return_Error_Type == Error_Clear && pwsf == JBoot)
+	{
+		LED2_On;
+		LED3_On;
+	}
+	else if (Return_Error_Type == Error_Clear && pwsf != JBoot) 
+	{
+		breledCtrlSem++;
+		if (breledCtrlSem <= pwmDutyCycle)
+		{
+			LED2_On;
+			LED3_Off;
+		}
+		else
+		{
+			LED2_Off;
+			LED3_On;
+		}
+		//5ms分频
+		if (breledCtrlSem == TickDivsIntervalus(5000) - 1)
+		{
+			breledCtrlSem = 0u;
+			if (!cdir)
+			{
+				pwmDutyCycle++; 
+				if (pwmDutyCycle == TickDivsIntervalus(5000) - 1) 
+					cdir = True;
+			}
+			else
+			{
+				pwmDutyCycle--;
+				if (pwmDutyCycle == 0u) 
+					cdir = False;
+			}
 		}
 	}
 }

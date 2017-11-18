@@ -11,7 +11,8 @@
 #define LED2 		PCout(11)			//PC11 	蓝灯 呼吸灯
 #define LED3		PCout(12)			//PC12 	蓝灯 
 
-typedef enum {LED_On = 0, LED_Off = !LED_On} LED_Status;//定义LED状态
+//LED共阳设计，低电平有效
+typedef enum {LED_On = 0, LED_Off = !LED_On} LED_Status;
 
 //封装
 #define LED0_On 	(LED0 = LED_On)
@@ -20,7 +21,6 @@ typedef enum {LED_On = 0, LED_Off = !LED_On} LED_Status;//定义LED状态
 #define LED1_On 	(LED1 = LED_On)
 #define LED1_Off	(LED1 = LED_Off)
 #define LED1_Blink	(LED1 = !LED1)		
-
 #define LED2_On		(LED2 = LED_On)
 #define LED2_Off 	(LED2 = LED_Off)
 #define LED2_Blink	(LED2 = !LED2)
@@ -28,10 +28,40 @@ typedef enum {LED_On = 0, LED_Off = !LED_On} LED_Status;//定义LED状态
 #define LED3_Off	(LED3 = LED_Off)
 #define LED3_Blink	(LED3 = !LED3)
 
+//LED集群编号
+typedef enum
+{
+	led_0 = 0,
+	led_1 = 1,
+	led_2 = 2,
+	led_3 = 3,
+} LEDGroupNbr;
+
+//LED动作列表
+typedef enum 
+{
+	On 		= 1,
+	Off 	= 2,
+	Blink 	= 3,
+} LEDMoveList;
+
+//呼吸灯算法结构体
+typedef __packed struct 
+{
+	u16 			breathCtrlSem;		//计数信号量
+	u16 			dutyCycle;			//占空比
+	Bool_ClassType 	changeDirFlag;		//换向标识
+	u32 			breathInterval;		//呼吸间隔
+} BreathPWMGroup;
+extern BreathPWMGroup led2, led3;
+
 void LED_Init (void);					//初始化
+extern void LEDGroupCtrl (LEDGroupNbr nbr, LEDMoveList mv);
 extern void Aft_PeriInit_Blink (void);	//系统外设初始化完成标志
-void RunLED_StatusCtrl (void);			
-void BreathLED_StatusCtrl (void);
+extern void RunLED_StatusCtrl (void);	
+void BreathPara_Init (BreathPWMGroup *led_nbr, u32 iv);
+void BreathPWMProduce (LEDGroupNbr nbr, BreathPWMGroup *led_nbr);
+extern void BreathLEDGroupCall (void);
 
 #endif
 

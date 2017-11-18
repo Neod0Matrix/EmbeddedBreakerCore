@@ -23,9 +23,9 @@ void EW_TriggerHandler (globalSystem_EW sys_ew)										//函数调用传参，
 		__ShellHeadSymbol__;
 		if (sys_ew != Error_Clear)
 		{
-			Beep_Once;																//蜂鸣器哔一下
-			LED0_On;																//开启故障指示灯
-			LED1_Off;																//关闭系统正常运行指示灯
+			Beep_Once;																//蜂鸣器哔一下														
+			LEDGroupCtrl(led_0, On);												//开启故障指示灯
+			LEDGroupCtrl(led_1, Off);												//关闭系统正常运行指示灯
 			
 			U1SD("[!ERROR!!ERROR!] ");												//报错指示头部
 			//选择错误类型打印报告log
@@ -73,7 +73,7 @@ void EW_TriggerHandler (globalSystem_EW sys_ew)										//函数调用传参，
 		//故障清除或者无错误
 		else
 		{
-			LED0_Off;																//关闭故障提示灯
+			LEDGroupCtrl(led_0, Off);												//关闭故障提示灯
 			Beep_Once;	
 			U1SD("[!CLEAR!!CLEAR!] No Error or Error-Clear\r\n");
 		}

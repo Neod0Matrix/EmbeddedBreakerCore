@@ -4,7 +4,11 @@
 //初始化PA8 PD2 PC11 PC12作为LED IO口
 
 //LED闪烁设置
-#define BlinkInterval			500u						//定时500ms翻转IO口
+#define BlinkInterval			500000u						//定时500ms翻转IO口
+#define LED2BreathInterval		5000u						//LED2呼吸间隔
+#define LED3BreathInterval		7000u						//LED3呼吸间隔
+
+BreathPWMGroup led2, led3;						
 
 //LED IO初始化
 void LED_Init (void)
@@ -36,6 +40,51 @@ void LED_Init (void)
 						GPIOC,					
 						IHL,				
 						EBO_Disable);
+	
+	//呼吸灯参数初始化
+	BreathPara_Init(&led2, LED2BreathInterval);
+	BreathPara_Init(&led3, LED3BreathInterval);
+}
+
+//LED集群动作控制
+void LEDGroupCtrl (LEDGroupNbr nbr, LEDMoveList mv)
+{
+	//用函数的方法封装不可调用的IO状态操作
+	switch (nbr)
+	{
+	case led_0:
+		switch (mv)
+		{
+		case On: 	LED0_On; 	break;
+		case Off: 	LED0_Off;	break;
+		case Blink: LED0_Blink;	break;
+		}
+		break;
+	case led_1:
+		switch (mv)
+		{
+		case On: 	LED1_On; 	break;
+		case Off: 	LED1_Off;	break;
+		case Blink: LED1_Blink;	break;
+		}
+		break;
+	case led_2:
+		switch (mv)
+		{
+		case On: 	LED2_On; 	break;
+		case Off: 	LED2_Off;	break;
+		case Blink: LED2_Blink;	break;
+		}
+		break;
+	case led_3:
+		switch (mv)
+		{
+		case On: 	LED3_On; 	break;
+		case Off: 	LED3_Off;	break;
+		case Blink: LED3_Blink;	break;
+		}
+		break;
+	}
 }
 
 //初始化完成闪烁标志
@@ -44,17 +93,17 @@ void Aft_PeriInit_Blink (void)
     u8 bb;													//开个小玩笑
     for (bb = 0; bb < 3; bb++)								//闪烁几次，直到有人发现已经完成初始化
     {
-        LED0_Blink;
-        LED1_Blink;
+		LEDGroupCtrl(led_0, Blink);
+        LEDGroupCtrl(led_1, Blink);
         delay_ms(50);
-        LED0_Blink;
-        LED1_Blink;
+        LEDGroupCtrl(led_0, Blink);
+        LEDGroupCtrl(led_1, Blink);
         delay_ms(50);
-        LED0_Blink;
-        LED1_Blink;
+        LEDGroupCtrl(led_0, Blink);
+        LEDGroupCtrl(led_1, Blink);
         delay_ms(50);
-        LED0_Blink;
-        LED1_Blink;
+        LEDGroupCtrl(led_0, Blink);
+        LEDGroupCtrl(led_1, Blink);
     }
 }
 
@@ -64,63 +113,68 @@ void RunLED_StatusCtrl (void)
 	static u16 runledBlinkSem = 0u;
 	//初始化过程常亮
 	if (Return_Error_Type == Error_Clear && pwsf == JBoot)
-		LED1_On;
+		LEDGroupCtrl(led_1, On);
 	//只有警报清除且初始化完成才闪烁，系统正常运行指示
 	else if (Return_Error_Type == Error_Clear && pwsf != JBoot) 
 	{
 		runledBlinkSem++;									//信号量开始计数
-		if (runledBlinkSem == TickDivsIntervalms(BlinkInterval) - 1)
+		if (runledBlinkSem == TickDivsIntervalus(BlinkInterval) - 1)
 		{
 			runledBlinkSem = 0u;
-			LED1_Blink;										//翻转IO口闪烁										
+			LEDGroupCtrl(led_1, Blink);															
 		}
 	}
 }
 
-//呼吸灯控制
-void BreathLED_StatusCtrl (void)
+//参数初始化
+void BreathPara_Init (BreathPWMGroup *led_nbr, u32 iv)
 {
-	static u16 breledCtrlSem = 0u;							//计数信号量
-	static u16 pwmDutyCycle = 0u;							//PWM占空比
-	static Bool_ClassType cdir = False;						//PWM增减换向标识
-	
+	led_nbr -> breathCtrlSem = 0u;
+	led_nbr -> changeDirFlag = False;
+	led_nbr -> dutyCycle = 0u;
+	led_nbr -> breathInterval = iv;							//呼吸间隔单独初始化
+}
+
+//呼吸灯效果生成
+void BreathPWMProduce (LEDGroupNbr nbr, BreathPWMGroup *led_nbr)
+{
 	//初始化过程常亮
 	if (Return_Error_Type == Error_Clear && pwsf == JBoot)
-	{
-		LED2_On;
-		LED3_On;
-	}
+		LEDGroupCtrl(nbr, On);
+	//初始化完成后开始呼吸
 	else if (Return_Error_Type == Error_Clear && pwsf != JBoot) 
 	{
-		breledCtrlSem++;
-		if (breledCtrlSem <= pwmDutyCycle)
-		{
-			LED2_On;
-			LED3_Off;
-		}
+		led_nbr -> breathCtrlSem++;							//信号量叠加
+		
+		if (led_nbr -> breathCtrlSem <= led_nbr -> dutyCycle)
+			LEDGroupCtrl(nbr, On);
 		else
+			LEDGroupCtrl(nbr, Off);
+		
+		if (led_nbr -> breathCtrlSem == TickDivsIntervalus(led_nbr -> breathInterval) - 1)//决定变换周期
 		{
-			LED2_Off;
-			LED3_On;
-		}
-		//5ms分频
-		if (breledCtrlSem == TickDivsIntervalus(5000) - 1)
-		{
-			breledCtrlSem = 0u;
-			if (!cdir)
+			led_nbr -> breathCtrlSem = 0u;					//信号量复位
+			if (!led_nbr -> changeDirFlag)
 			{
-				pwmDutyCycle++; 
-				if (pwmDutyCycle == TickDivsIntervalus(5000) - 1) 
-					cdir = True;
+				led_nbr -> dutyCycle++; 					//占空比增加，LED逐渐变亮
+				if (led_nbr -> dutyCycle == TickDivsIntervalus(led_nbr -> breathInterval) - 1) 
+					led_nbr -> changeDirFlag = True;		//换向
 			}
 			else
 			{
-				pwmDutyCycle--;
-				if (pwmDutyCycle == 0u) 
-					cdir = False;
+				led_nbr -> dutyCycle--;						//占空比减小，LED逐渐变暗
+				if (led_nbr -> dutyCycle == 0u) 				
+					led_nbr -> changeDirFlag = False;		//换向
 			}
 		}
 	}
+}
+
+//呼吸灯组调用
+void BreathLEDGroupCall (void)
+{		
+	BreathPWMProduce(led_2, &led2);
+	BreathPWMProduce(led_3, &led3);
 }
 
 //====================================================================================================

@@ -4,7 +4,7 @@
 //====================================================================================================
 //user interface
 
-#define PageAlterInterval	5000u			//切屏间隔5s
+#define PageAlterInterval			5000000		//切屏间隔5s
 
 u8 oledScreenFlag = 2u;
 
@@ -217,7 +217,7 @@ void OLED_StatusDetector (void)
 //切屏控制
 void OLED_PageAlterCtrl (void)
 {
-	static u16 oledFreshcnt = 0u;
+	static unsigned long oledFreshcnt = 0u;
 	static Bool_ClassType oledFlushEnable = True;
 	
 	if (pwsf != JBoot)						//仅在初始化完成后生效
@@ -248,7 +248,7 @@ void OLED_PageAlterCtrl (void)
 		//时间扩展5s自动切屏/按键KEY0手动切屏
 		if (oledFlushEnable)
 		{
-			if (oledFreshcnt == TickDivsIntervalms(PageAlterInterval) - 1 || KEY0_NLTrigger)
+			if (oledFreshcnt == TickDivsIntervalus(PageAlterInterval) - 1 || KEY0_NLTrigger)
 			{
 				oledFreshcnt = 0u;			//扩展时间复位
 				

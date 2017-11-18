@@ -13,7 +13,7 @@
 	Timerx_Prescaler上限short
 */
 #ifndef TimeCalcusofucTimer
-#define TimeCalcusofucTimer(a, p)		((float)((1 + a) * (1 + p)) / (float)Get_BSP_CPU_ClkFreq())//单位s
+#define TimeCalcusofucTimer(a, p)		(((1 + a) * (1 + p))/ (Get_BSP_CPU_ClkFreq() / 1000000u))//单位us
 #endif
 
 #define TimerInitCounterValue			0u								//定时器计数初值

@@ -37,7 +37,7 @@ static int Protocol_Stack[][Protocol_Stack_Size] =
 //通信起始标志
 void Response_Strings (void)
 {
-    LED0_Off;														//关闭故障指示灯
+    LEDGroupCtrl(led_0, Off);										//关闭故障指示灯
     Beep_Off;														//正常情况下关闭
 	Aft_PeriInit_Blink();
     displaySystemInfo();											//参看系统状态

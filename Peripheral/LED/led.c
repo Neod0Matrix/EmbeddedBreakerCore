@@ -3,11 +3,12 @@
 //====================================================================================================
 //初始化PA8 PD2 PC11 PC12作为LED IO口
 
-//LED闪烁设置
+//LED闪烁设置，单位us
 #define BlinkInterval			500000u						//定时500ms翻转IO口
-#define LED2BreathInterval		5000u						//LED2呼吸间隔
-#define LED3BreathInterval		7000u						//LED3呼吸间隔
+#define LED2BreathInterval		10000u						//LED2呼吸间隔
+#define LED3BreathInterval		10000u						//LED3呼吸间隔
 
+//结构体声明
 BreathPWMGroup led2, led3;						
 
 //LED IO初始化
@@ -49,7 +50,7 @@ void LED_Init (void)
 //LED集群动作控制
 void LEDGroupCtrl (LEDGroupNbr nbr, LEDMoveList mv)
 {
-	//用函数的方法封装不可调用的IO状态操作
+	//用函数传参的方法封装不可调用的硬件IO状态操作
 	switch (nbr)
 	{
 	case led_0:
@@ -90,7 +91,8 @@ void LEDGroupCtrl (LEDGroupNbr nbr, LEDMoveList mv)
 //初始化完成闪烁标志
 void Aft_PeriInit_Blink (void)
 {
-    u8 bb;													//开个小玩笑
+    u8 bb;													
+	
     for (bb = 0; bb < 3; bb++)								//闪烁几次，直到有人发现已经完成初始化
     {
 		LEDGroupCtrl(led_0, Blink);
@@ -126,7 +128,10 @@ void RunLED_StatusCtrl (void)
 	}
 }
 
-//参数初始化
+/*
+	呼吸灯结构体成员初始化
+	传参：结构体指针，呼吸间隔
+*/
 void BreathPara_Init (BreathPWMGroup *led_nbr, u32 iv)
 {
 	led_nbr -> breathCtrlSem = 0u;
@@ -135,12 +140,15 @@ void BreathPara_Init (BreathPWMGroup *led_nbr, u32 iv)
 	led_nbr -> breathInterval = iv;							//呼吸间隔单独初始化
 }
 
-//呼吸灯效果生成
+/*
+	呼吸灯效果生成
+	传参：LED灯组编号，呼吸灯结构体
+*/
 void BreathPWMProduce (LEDGroupNbr nbr, BreathPWMGroup *led_nbr)
 {
-	//初始化过程常亮
-	if (Return_Error_Type == Error_Clear && pwsf == JBoot)
-		LEDGroupCtrl(nbr, On);
+	//初始化过程关闭
+	if (pwsf == JBoot || Return_Error_Type != Error_Clear)
+		LEDGroupCtrl(nbr, Off);
 	//初始化完成后开始呼吸
 	else if (Return_Error_Type == Error_Clear && pwsf != JBoot) 
 	{
@@ -157,9 +165,9 @@ void BreathPWMProduce (LEDGroupNbr nbr, BreathPWMGroup *led_nbr)
 			if (!led_nbr -> changeDirFlag)
 			{
 				led_nbr -> dutyCycle++; 					//占空比增加，LED逐渐变亮
-				if (led_nbr -> dutyCycle == TickDivsIntervalus(led_nbr -> breathInterval) - 1) 
+				if (led_nbr -> dutyCycle == 100u) 			//占空比默认在0-100之间变化
 					led_nbr -> changeDirFlag = True;		//换向
-			}
+			}	
 			else
 			{
 				led_nbr -> dutyCycle--;						//占空比减小，LED逐渐变暗

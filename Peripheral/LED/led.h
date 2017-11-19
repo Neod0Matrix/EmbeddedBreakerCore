@@ -6,10 +6,10 @@
 //====================================================================================================
 //初始化PA8 PD2 PC11 PC12作为LED IO口
 
-#define LED0 		PAout(8)			//PA8 	红灯 报警指示灯
-#define LED1 		PDout(2)			//PD2 	绿灯 系统运行指示灯
-#define LED2 		PCout(11)			//PC11 	蓝灯 呼吸灯
-#define LED3		PCout(12)			//PC12 	蓝灯 
+#define LED0 		PAout(8)			//PA8 	红灯 报警指示灯(初始化过程闪烁，正常状态关闭，报警时常亮)
+#define LED1 		PDout(2)			//PD2 	绿灯 系统运行状态指示灯(初始化过程常亮，正常状态闪烁，报警时关闭)
+#define LED2 		PCout(11)			//PC11 	蓝灯 呼吸灯(初始化过程关闭，正常状态呼吸，报警时关闭)
+#define LED3		PCout(12)			//PC12 	蓝灯 呼吸灯(初始化过程关闭，正常状态呼吸，报警时关闭)
 
 //LED共阳设计，低电平有效
 typedef enum {LED_On = 0, LED_Off = !LED_On} LED_Status;

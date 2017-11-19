@@ -20,6 +20,7 @@
 #define EWF					0x0F						//报警反馈
 #define ORF					0x1A						//指令执行结束
 #define URC					0x1B						//URC的协议配置
+#define MEW					0x1C						//警报的手动触发与清除
 
 //数据位限定
 #define DMAX				0x09						//十进制最大
@@ -37,6 +38,7 @@
 #define URC_SW_1Bit			2u							//取URC的开关标识1
 #define URC_SW_2Bit			3u							//取URC的开关标识2
 #define URC_ED_Bit			4u							//取URC的使能/失能标识
+#define MEW_Read_Bit		2u							//取手动警报控制标识
 
 //通过协议栈中的数据判断执行指令类型
 //协议缓存数组第二位数据
@@ -50,6 +52,7 @@ typedef enum
 	pEWF	= 5,
 	pORF	= 6,
 	pURC	= 7,
+	pMEW	= 8,
 } Protocol_Order;
 extern Protocol_Order PO_Judge;							//判断标识
 

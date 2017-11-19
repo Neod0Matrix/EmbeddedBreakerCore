@@ -193,6 +193,28 @@ void pclURC_DebugHandler (void)
 			printf("Setting Switch Number: [%d] Set to Status: [%d]\r\n", sw_type, ed_status);
 			usart1WaitForDataTransfer();
 		}
+		
+		//编号选取
+		switch (sw_type)
+		{
+		case urc_map:		urcMapTable_Print();										break;
+		case urc_ew: 		EW_Switch 		= (Error_Warning_Switch)ed_status;	 		break;
+		case urc_pd: 		PD_Switch 		= (Print_Debug_Switch)ed_status; 			break;
+		case urc_oled: 		OLED_Switch 	= (OLED_Use_Switch)ed_status; 				break;
+		case urc_pvd: 		PVD_Switch 		= (PVD_Check_Switch)ed_status; 				break;
+		case urc_temp: 		Temp_Switch 	= (Temperature_Warning_Switch)ed_status; 	break;
+		case urc_pc: 		PC_Switch		= (Protocol_Com_Switch)ed_status;			break;	
+		case urc_task: 		TMMS			= (TaskManage_Mode_Select)ed_status;		break;	
+		case urc_lvd: 		LVD_Switch		= (Low_Voltage_Detect_Warning)ed_status;	break;	
+		case urc_sm: 		SM_Switch		= (SleepMode_Switch)ed_status;				break;	
+		case urc_stby: 		Stby_Switch		= (Boot_Standby_Switch)ed_status;			break;
+		case urc_hex: 		hexEW_Switch	= (hex_ErrorWarning_Switch)ed_status;		break;
+		case urc_pid: 		pidDS_Switch	= (pidDebugSpeed_Switch)ed_status;			break;
+		case urc_psaux: 	psaux_Switch	= (psaux_CheckTaskRound)ed_status;			break;
+		case urc_dsd:		DSD_Switch		= (DataScope_DetectData)ed_status;			break;
+		}
+	
+		__ShellHeadSymbol__; U1SD("URC Setting Update\r\n");//URC配置更新
 	}
 	else if (sw_type > Max_Option_Value)				//选项超值报错
 	{
@@ -200,28 +222,6 @@ void pclURC_DebugHandler (void)
 		SERIALDATAERROR;		
 		SERIALDATAERROR_16;		
 	}
-	
-	//编号选取
-	switch (sw_type)
-	{
-	case urc_map:		urcMapTable_Print();										break;
-	case urc_ew: 		EW_Switch 		= (Error_Warning_Switch)ed_status;	 		break;
-	case urc_pd: 		PD_Switch 		= (Print_Debug_Switch)ed_status; 			break;
-	case urc_oled: 		OLED_Switch 	= (OLED_Use_Switch)ed_status; 				break;
-	case urc_pvd: 		PVD_Switch 		= (PVD_Check_Switch)ed_status; 				break;
-	case urc_temp: 		Temp_Switch 	= (Temperature_Warning_Switch)ed_status; 	break;
-	case urc_pc: 		PC_Switch		= (Protocol_Com_Switch)ed_status;			break;	
-	case urc_task: 		TMMS			= (TaskManage_Mode_Select)ed_status;		break;	
-	case urc_lvd: 		LVD_Switch		= (Low_Voltage_Detect_Warning)ed_status;	break;	
-	case urc_sm: 		SM_Switch		= (SleepMode_Switch)ed_status;				break;	
-	case urc_stby: 		Stby_Switch		= (Boot_Standby_Switch)ed_status;			break;
-	case urc_hex: 		hexEW_Switch	= (hex_ErrorWarning_Switch)ed_status;		break;
-	case urc_pid: 		pidDS_Switch	= (pidDebugSpeed_Switch)ed_status;			break;
-	case urc_psaux: 	psaux_Switch	= (psaux_CheckTaskRound)ed_status;			break;
-	case urc_dsd:		DSD_Switch		= (DataScope_DetectData)ed_status;			break;
-	}
-	
-	__ShellHeadSymbol__; U1SD("URC Setting Update\r\n");//URC配置更新
 }
 
 //====================================================================================================

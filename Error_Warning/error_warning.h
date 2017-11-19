@@ -10,6 +10,7 @@
 //声明各种错误类型
 typedef enum
 {
+	Test_Occur		= 0,												//测试警报发生
     Error_Clear 	= 1,												//警报解除
     Emergency_Stop 	= 2,												//紧急停止
     SendData_Error 	= 3,												//串口数据发送错误
@@ -25,7 +26,19 @@ extern globalSystem_EW Return_Error_Type;								//得到状态
 extern globalSystem_EW detErrorStatus (void);
 extern void EW_TriggerHandler (globalSystem_EW sys_ew);					//错误响应函数
 
+//警报的手动控制
+typedef enum
+{
+	open_ew = 0,
+	close_ew = 1
+} EWManCtrl;
+#define ManualCtrlLimit			(EWManCtrl)2
+
+extern void ManualCtrlEW (void);
+
 //封装
+#define TEST_OCCUR				EW_TriggerHandler(Test_Occur)			//警报发生
+
 #define ERROR_CLEAR 			EW_TriggerHandler(Error_Clear)			//警报解除
 
 #define EMERGENCYSTOP 			EW_TriggerHandler(Emergency_Stop) 		//紧急停止

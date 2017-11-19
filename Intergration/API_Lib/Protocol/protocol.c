@@ -32,6 +32,8 @@ static int Protocol_Stack[][Protocol_Stack_Size] =
 	/*5*/	{DH, ORF, NB, NB, NB, NB, NB, NB, NB, NB, NB, NB, NB, NB, NB, NB, NB, DT},
 	//URC
 	/*6*/	{DH, URC, NB, 0x03, NB, NB, NB, NB, NB, NB, NB, NB, NB, NB, NB, NB, NB, DT},
+	//警报的手动触发与清除
+	/*7*/	{DH, MEW, 0x01, NB, NB, NB, NB, NB, NB, NB, NB, NB, NB, NB, NB, NB, NB, DT},
 };
 
 //通信起始标志
@@ -168,11 +170,11 @@ pclShell_Status shellTrigger (void)
 			//只对三个数据标识进行检查，存在匹配漏洞，但是这样做比较简单不容易出错
 			if (	
 					//1、检查数据头部
-					USART1_RX_BUF[Header_Bit] 				== Protocol_Stack[pcl_match][Header_Bit]
-					//2、检查数据尾部
-					&& USART1_RX_BUF[Data_All_Length - 1u] 	== Protocol_Stack[pcl_match][Tail_Bit]//取串口缓存数据总长的最后一位进行比较
+					USART1_RX_BUF[Header_Bit] == Protocol_Stack[pcl_match][Header_Bit]
+					//2、检查数据尾部(固有字节检查，也可以换成检查数据末尾字头)
+					&& USART1_RX_BUF[Protocol_Stack_Size - 1u] 	== Protocol_Stack[pcl_match][Tail_Bit]
 					//3、检查指令类型
-					&& USART1_RX_BUF[Order_Type_Bit] 		== Protocol_Stack[pcl_match][Order_Type_Bit]
+					&& USART1_RX_BUF[Order_Type_Bit] == Protocol_Stack[pcl_match][Order_Type_Bit]
 				)
 			{
 				PO_Judge = pcl_match;								//自动匹配，局部变量转全局变量
@@ -183,11 +185,12 @@ pclShell_Status shellTrigger (void)
 			}
 			
 			//数据公共鉴定位不正确
+			//如果是匹配类型找不到，系统将不会做出任何反应
 			else if (
 					//数据头不正确
 					USART1_RX_BUF[Header_Bit] 				!= Protocol_Stack[pcl_match][Header_Bit]
 					//数据尾不正确
-					|| USART1_RX_BUF[Data_All_Length - 1u] 	!= Protocol_Stack[pcl_match][Tail_Bit]//取串口缓存数据总长的最后一位进行比较
+					|| USART1_RX_BUF[Protocol_Stack_Size - 1u] 	!= Protocol_Stack[pcl_match][Tail_Bit]
 				)												
 			{
 				order_bootflag = pcl_error;							//不执行协议栈
@@ -256,6 +259,10 @@ void OrderResponse_Handler (void)
 		case pURC:
 			U1SD("Protocol Setting URC\r\n");
 			pclURC_DebugHandler();									//协议配置资源									
+			break;
+		case pMEW:
+			U1SD("Protocol Control Error-Warning\r\n");
+			ManualCtrlEW();											//手动控制报警
 			break;
 		
 		//--------------------------主动传输类，无操作----------------------//

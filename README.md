@@ -1,16 +1,14 @@
 Copyright
 ===============
 
-Copyright @2017 T.WKVER \</MATRIX>
-
-Code by \</MATRIX>@Neod Anderjon(LeaderN)
-
-Thank to fork or watch my project
+	Copyright @2017 T.WKVER \</MATRIX>
+	Code by \</MATRIX>@Neod Anderjon(LeaderN)
+	Thank to fork or watch my project
 
 Update
 ===============
 
-	最后更新时间: 2017/11/19pm1453
+	最后更新时间: 2017/11/19pm1549
 	详细更新内容见softlog.txt
 
 Project Manual

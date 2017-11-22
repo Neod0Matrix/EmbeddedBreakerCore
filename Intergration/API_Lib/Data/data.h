@@ -12,6 +12,10 @@
 #define Get_Array_Size(array) 	(sizeof(array) / sizeof((array)[0]))//计算出数组宽度
 #endif  
 
+#ifndef RangeRandom
+#define RangeRandom(a, b)		rand()%(b - a + 1) + a		//求取一定范围随机数
+#endif
+
 #ifndef U1TSP
 #define U1TSP(str) 				U1SD(#str)					//#str把传进来的参数直接变成字符串
 #endif

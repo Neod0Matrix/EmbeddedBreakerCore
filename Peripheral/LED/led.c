@@ -6,10 +6,12 @@
 //LED闪烁设置，单位us
 #define BlinkInterval			500000u						//定时500ms翻转IO口
 #define LED2BreathInterval		10000u						//LED2呼吸间隔
-#define LED3BreathInterval		10000u						//LED3呼吸间隔
+//随机闪烁LED
+#define InvalMinLimit			10000u						//下限10ms
+#define InvalMaxLimit 			300000u						//上限300ms
 
 //结构体声明
-BreathPWMGroup led2, led3;						
+BreathPWMGroup led2;																
 
 //LED IO初始化
 void LED_Init (void)
@@ -44,7 +46,6 @@ void LED_Init (void)
 	
 	//呼吸灯参数初始化
 	BreathPara_Init(&led2, LED2BreathInterval);
-	BreathPara_Init(&led3, LED3BreathInterval);
 }
 
 //LED集群动作控制
@@ -109,21 +110,34 @@ void Aft_PeriInit_Blink (void)
     }
 }
 
-//RunLED状态控制
-void RunLED_StatusCtrl (void)
+//BlinkLED状态控制
+void BlinkLED_StatusCtrl (void)
 {
 	static u16 runledBlinkSem = 0u;
+	static u16 randledBlinkSem = 0u;
+	static u32 randledinterval = InvalMinLimit;				//闪烁间隔变量
 	//初始化过程常亮
 	if (Return_Error_Type == Error_Clear && pwsf == JBoot)
+	{
 		LEDGroupCtrl(led_1, On);
+		LEDGroupCtrl(led_3, Off);
+	}
 	//只有警报清除且初始化完成才闪烁，系统正常运行指示
 	else if (Return_Error_Type == Error_Clear && pwsf != JBoot) 
 	{
-		runledBlinkSem++;									//信号量开始计数
+		//信号量开始计数
+		runledBlinkSem++;									
+		randledBlinkSem++;
 		if (runledBlinkSem == TickDivsIntervalus(BlinkInterval) - 1)
 		{
 			runledBlinkSem = 0u;
 			LEDGroupCtrl(led_1, Blink);															
+		}
+		if (randledBlinkSem == TickDivsIntervalus(randledinterval) - 1)
+		{
+			randledBlinkSem = 0u;
+			LEDGroupCtrl(led_3, Blink);	
+			randledinterval = RangeRandom(InvalMinLimit, InvalMaxLimit);//更新
 		}
 	}
 }
@@ -182,7 +196,6 @@ void BreathPWMProduce (LEDGroupNbr nbr, BreathPWMGroup *led_nbr)
 void BreathLEDGroupCall (void)
 {		
 	BreathPWMProduce(led_2, &led2);
-	BreathPWMProduce(led_3, &led3);
 }
 
 //====================================================================================================

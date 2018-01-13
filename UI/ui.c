@@ -196,9 +196,9 @@ void OLED_Display_Mem (void)
 {
 	static u8 memUsagePercent = 0u;
 	
-	if (memUsagePercent != mem_perused())	//值变化后才更新
+	if (memUsagePercent != MemUsagePercent)	//值变化后才更新
 	{
-		memUsagePercent = mem_perused();
+		memUsagePercent = MemUsagePercent;
 		
 		OLED_ShowNum(strPos(3u), ROW2, memUsagePercent, 3u, Font_Size); 		
 		OLED_Refresh_Gram();				//更新显示

@@ -1,5 +1,5 @@
-#ifndef __STR_CATE_H__
-#define __STR_CATE_H__
+#ifndef __DATA_H__
+#define __DATA_H__
 #include "stdafx.h"
 //code by </MATRIX>@Neod Anderjon
 //author: Neod Anderjon
@@ -9,7 +9,7 @@
 #define snprintfStackSpace		(sizeof(char) * 100u)		//snprintf打印空间，打印类型为char字符
 
 #ifndef Get_Array_Size  									//数组格式大小
-#define Get_Array_Size(array) 	(sizeof(array) / sizeof((array)[0]))//计算出数组宽度
+#define Get_Array_Size(array) 	(sizeof(array) / sizeof((array)[0]))//计算出数组宽度(整个数组存储宽度/一个元素的宽度)
 #endif  
 
 #ifndef RangeRandom

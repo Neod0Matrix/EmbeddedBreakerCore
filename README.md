@@ -8,7 +8,7 @@ Copyright
 Update
 ===============
 
-	最后更新时间: 2017/11/22pm1802
+	最后更新时间: 2018/01/13pm1718
 	详细更新内容见softlog.txt
 
 Project Manual
@@ -28,7 +28,7 @@ Project Manual
 	Laboratory: 	T.WKVER
 	OS_Version: 	μC/OS-III v3.03
 	FWLib_Verson: 	v3.5
-	Project_Verson: OS_v0p3_LTE 长期演进版(什么时候TMD才能跑出个stable来啊)_(:з」∠)_ _(┐「ε:)_
+	Project_Verson: OS_v0p4_LTE 长期演进版(什么时候TMD才能跑出个stable来啊)_(:з」∠)_ _(┐「ε:)_
 	
 Use Manual
 ===============
@@ -40,7 +40,7 @@ Use Manual
 Inner IO Map
 ===============
 
-(标注有*表示该IO口在PCB上使用ULN2003A驱动，该芯片有反相功能)
+(标注有*表示该IO口在PCB上使用ULN2003A驱动，该芯片有反相特性)
 
 	引脚	用途		I/O		备注
 

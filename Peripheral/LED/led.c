@@ -51,7 +51,10 @@ void LED_Init (void)
 //LED集群动作控制
 void LEDGroupCtrl (LEDGroupNbr nbr, LEDMoveList mv)
 {
-	//用函数传参的方法封装不可调用的硬件IO状态操作
+	/*
+		用函数传参的方法封装不可调用的硬件IO状态操作
+		也可以使用官方固件库里的GPIO函数操作电平
+	*/
 	switch (nbr)
 	{
 	case led_0:

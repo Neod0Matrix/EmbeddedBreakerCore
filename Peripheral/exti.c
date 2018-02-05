@@ -39,8 +39,6 @@ void ucEXTI_ModeConfig (
 //外部中断初始化函数
 void EXTI_Config_Init (void)
 {
-    RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE);			//外部中断，需要使能AFIO时钟
-   
 	//STEW(正常状态低电平，触发拉高) PB8	
 	ucGPIO_Config_Init (RCC_APB2Periph_GPIOB,			
 						GPIO_Mode_IPU,					
@@ -50,8 +48,7 @@ void EXTI_Config_Init (void)
 						GPIOB,					
 						NI,				
 						EBO_Disable);	
-		
-	//PB8 STEW
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE);			//外部中断，需要使能AFIO时钟
 	ucEXTI_ModeConfig(
 						GPIO_PortSourceGPIOB, 
 						GPIO_PinSource8, 
@@ -60,7 +57,7 @@ void EXTI_Config_Init (void)
 						EXTI_Trigger_Rising, 
 						EXTI9_5_IRQn, 
 						0x01, 
-						0x01);
+						0x03);
 }
 
 //STEW--PB8
@@ -70,14 +67,13 @@ void EXTI9_5_IRQHandler (void)
 	OSIntEnter();    
 #endif
 	
-	if (STEW_LTrigger)  											//长按检测急停
+	if (EXTI_GetITStatus(Stew_EXTI_Line) != RESET)
 	{
 		EMERGENCYSTOP;												
 		EMERGENCYSTOP_16;
-		
 		while (STEW_LTrigger);										//等待急停释放，允许长期检测
 		ERROR_CLEAR;												//急停复位后自动清除警报	
-	}
+	}	
 	EXTI_ClearITPendingBit(Stew_EXTI_Line);  						//清除EXTI线路挂起位
 	
 #if SYSTEM_SUPPORT_OS 												//如果SYSTEM_SUPPORT_OS为真，则需要支持OS

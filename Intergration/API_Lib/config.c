@@ -78,7 +78,7 @@ void Universal_Resource_Config (void)
 		调试时建议关闭
 		5V或者3.3V供电关闭
 	*/
-	LVD_Switch			= LVD_Enable;					//LVD_Enable		LVD_Disable
+	LVD_Switch			= LVD_Disable;					//LVD_Enable		LVD_Disable
 
 /*$PAGE*/
 /*->> 开关类*/

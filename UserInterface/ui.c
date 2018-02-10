@@ -100,6 +100,11 @@ void OLED_DisplayInitConst (void)
 	if (OLED_Switch == OLED_Enable)
 	{
 		OLED_ScreenP0_Const();	
+		
+		/*
+			@EmbeddedBreakerCore Extern API Insert
+		*/
+		//OLED_ScreenModules_Const();
 		delay_ms(300);						//logo延迟
 		OLED_Clear();						//擦除原先的画面
 		OLED_ScreenP1_Const();	
@@ -220,7 +225,7 @@ void OLED_PageAlterCtrl (void)
 	static unsigned long oledFreshcnt = 0u;
 	static Bool_ClassType oledFlushEnable = True;
 	
-	if (pwsf != JBoot)						//仅在初始化完成后生效
+	if (pwsf != JBoot && globalSleepflag == SysOrdWork)						
 	{
 		//自动切屏使能控制
 		if (KEY1_NLTrigger)
@@ -282,6 +287,11 @@ void UIScreen_DisplayHandler (void)
 		{
 		case 0: 
 			OLED_ScreenP0_Const(); 
+		
+			/*
+				@EmbeddedBreakerCore Extern API Insert
+			*/
+			//OLED_ScreenModules_Const();
 			break;
 		case 1: 
 			OLED_ScreenP1_Const();
@@ -294,6 +304,12 @@ void UIScreen_DisplayHandler (void)
 			OLED_ScreenP3_Const();
 			OLED_StatusDetector();	
 			break;
+		/*
+			@EmbeddedBreakerCore Extern API Insert
+		*/
+//		case 4:
+//			OLED_DisplayModules();
+//			break;
 		}
 	}
 }

@@ -36,7 +36,6 @@ void bspPeriSysCalls (void)
 	//----------------------------------IO口初始化----------------------------------------//
 	
 	KEY_Init();         								//初始化与按键连接的硬件接口
-	
 	Beep_IO_Init();										//初始化报警用蜂鸣器
 	LVD_IO_Init();										//欠压检测IO
 	
@@ -47,6 +46,11 @@ void bspPeriSysCalls (void)
 	//--------------------------------界面功能初始化--------------------------------------//
 	
     OLED_Init();										//初始化OLED
+	
+	/*
+		@EmbeddedBreakerCore Extern API Insert
+	*/
+	Modules_HardwareInit();								//模块硬件初始化
 }
 
 /*$PAGE*/

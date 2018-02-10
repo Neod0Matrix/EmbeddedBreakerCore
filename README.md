@@ -8,7 +8,7 @@ Copyright
 Update
 ===============
 
-	最后更新时间: 2018/02/09pm2328
+	最后更新时间: 2018/02/10pm2253
 	详细更新内容见softlog.txt
 
 Project Manual
@@ -28,7 +28,7 @@ Project Manual
 	Laboratory: 	T.WKVER
 	OS_Version: 	μC/OS-III v3.03
 	FWLib_Verson: 	v3.5
-	Project_Verson: OS_v0p4_LTE 长期演进版(什么时候TMD才能跑出个stable来啊)_(:з」∠)_ _(┐「ε:)_
+	Project_Verson: OS_v0p5_LTE 长期演进版(什么时候TMD才能跑出个stable来啊)_(:з」∠)_ _(┐「ε:)_
 	
 Use Manual
 ===============
@@ -41,6 +41,9 @@ Use Manual
 	根据实际芯片器件选择设置工程宏及编译优化选项
 	define: STM32F10X_HD(芯片容量),USE_STDPERIPH_DRIVER(使用固件库)
 	Optimize for time, One ELF Section per Function
+	所有的模块链接到框架里的函数和设置项都在Modules/link.*里
+	默认不开启OS，如需要修改config.*选项，并注意设置相应的任务特性
+	请尽量不要修该框架内除link.*，config.*以外的文件内容
 	
 Inner IO Map
 ===============

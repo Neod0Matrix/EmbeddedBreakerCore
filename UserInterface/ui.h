@@ -17,7 +17,7 @@ void OLED_ScreenP1_Const (void);
 void OLED_ScreenP2_Const (void);	
 void OLED_ScreenP3_Const (void);
 void OLED_DisplayInitConst (void);		//显示的常量字符
-#define ScreenPageCount	4u				//页数统计
+//#define ScreenPageCount	4u				//页数统计
 
 void OLED_Display_EW (void);			//显示error_warning
 void OLED_Display_ITD (void);			//显示inner_temp_detector

@@ -58,6 +58,10 @@ void EXTI_Config_Init (void)
 						EXTI9_5_IRQn, 
 						0x01, 
 						0x03);
+	/*
+		@EmbeddedBreakerCore Extern API Insert
+	*/
+	Modules_ExternInterruptInit();
 }
 
 //STEW--PB8

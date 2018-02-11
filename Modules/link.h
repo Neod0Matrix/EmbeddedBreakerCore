@@ -23,7 +23,7 @@ typedef enum
 	empty = 0,
 } Modules_SwitchNbr;
 
-#define Max_Option_Value		13u							//裁去protocol.h中的定义放到这里来重新定义urc协议长度
+#define Max_Option_Value		14u							//裁去protocol.h中的定义放到这里来重新定义urc协议长度
 #define ScreenPageCount			4u							//裁去ui.h中定义的总切屏数到这里来重新定义
 
 //对外API接口

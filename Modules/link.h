@@ -23,8 +23,12 @@ typedef enum
 	empty = 0,
 } Modules_SwitchNbr;
 
-#define Max_Option_Value		14u							//裁去protocol.h中的定义放到这里来重新定义urc协议长度
-#define ScreenPageCount			4u							//裁去ui.h中定义的总切屏数到这里来重新定义
+//裁去config.h中的定义放到这里来重新定义urc协议长度
+#define Module_Add_urcOption_Count	0u
+#define Max_Option_Value		(Module_Add_urcOption_Count + FrameDefault_urcOption_Count)			
+//裁去ui.h中定义的总切屏数到这里来重新定义
+#define Module_Add_oledScreen_Count	0u
+#define ScreenPageCount			(Module_Add_oledScreen_Count + FrameDefault_oledScreen_Count)					
 
 //对外API接口
 void Modules_UniResConfig (void);							//选项设置，链接到Universal_Resource_Config函数的模块库

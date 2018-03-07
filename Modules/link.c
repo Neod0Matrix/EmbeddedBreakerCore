@@ -38,9 +38,12 @@ void OLED_ScreenModules_Const (void)
 }
 
 //OLED模块调用数据显示，链接到UIScreen_DisplayHandler函数
-void OLED_DisplayModules (void)
+void OLED_DisplayModules (u8 page)
 {
-	
+	switch (page)
+	{
+	//此处添加case 4,5,6...
+	}
 }
 
 //硬件底层初始化任务，链接到bspPeriSysCalls函数

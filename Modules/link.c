@@ -42,7 +42,7 @@ void OLED_DisplayModules (u8 page)
 {
 	switch (page)
 	{
-	//此处添加case 4,5,6...
+	//此处添加case 5,6...(从限定值第一个开始)
 	}
 }
 

@@ -40,9 +40,12 @@ void OLED_ScreenModules_Const (void)
 //OLED模块调用数据显示，链接到UIScreen_DisplayHandler函数
 void OLED_DisplayModules (u8 page)
 {
-	switch (page)
+	if (UIRef_ModeFlag == Stable_Ref)
 	{
-	//此处添加case 5,6...(从限定值第一个开始)
+		switch (page)
+		{
+		//此处添加case 5,6...(从限定值第一个开始)
+		}
 	}
 }
 

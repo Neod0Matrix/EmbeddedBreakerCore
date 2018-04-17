@@ -5,12 +5,21 @@
 /*
 	模块对框架EmbeddBreakerCore的链接
 	该文件写入对框架的函数调用支持
+	更新到模块时该文件和link.h文件都不复制
+	这样能保证框架对模块更新的无缝对接
 */
 
 //选项设置，链接到Universal_Resource_Config函数的模块库
 void Modules_UniResConfig (void)
 {
 	//该函数设置内容可以更新Universal_Resource_Config函数原设置
+	/*
+		对框架而言，不显示模块的OLED部分
+		对应用的模块而言，不显示框架的常量字符
+		且需要使自己本身的显示生效
+		框架设置为失能，模块设置为使能
+	*/
+	MOE_Switch			= MOE_Disable;					//MOE_Enable		MOE_Disable
 }
 
 //模块选项映射表，链接到urcMapTable_Print函数
